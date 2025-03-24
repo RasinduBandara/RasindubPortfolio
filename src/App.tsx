@@ -60,7 +60,7 @@ function App() {
       {/* Background Video */}
       <video
         className="absolute inset-0 w-full h-full object-cover -z-200 blur-lg"
-        src="public/bkvideO2.mp4"
+        src="/bkvideO2.mp4"
         autoPlay
         muted
         loop
@@ -81,7 +81,7 @@ function App() {
           >
             <div className="w-48 h-48 mx-auto relative">
               <img
-                src="public/profile.jpg"
+                src="/profile.jpg"
                 alt="Profile"
                 className="w-full h-full rounded-full object-cover shadow-xl"
               />
