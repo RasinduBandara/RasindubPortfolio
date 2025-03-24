@@ -112,7 +112,7 @@ function App() {
             animate={{ opacity: 1 }}
             transition={{ delay: 0.3 }}
           >
-            Full Stack Developer
+            I'm a Full Stack Developer
           </motion.p>
           <motion.div 
             className="flex justify-center gap-6"
