@@ -13,19 +13,19 @@ function App() {
     {
       title: "Estate Agent Client-Side Web Application",
       description: "Developed a React.js-based property search SPA with interactive UI components. Implemented JSON-based search functionality, property listings, and a responsive design. Integrated favourites management with local storage and Google Maps API. Ensured client-side security and delivered the project in a viva assessment.",
-      image: "public/Property.png",
+      image: "/Property.png",
       tags: ["React"]
     },
     {
       title: "Marketing Site for DreamAuto",
       description: "Responsive marketing site for DreamAuto. Includes a landing page with a hero section, and a contact form. Developed using React JS.",
-      image: "public/MarketingSite.png",
+      image: "/MarketingSite.png",
       tags: ["React"]
     },
     {
       title: "ML Powered Vehicle Recomendation Web App",
       description: "A web app that helps users find the best vehicle based on their budget and preferences. It includes a machine learning recommendation system, a chatbot for finance and insurance guidance, a vehicle comparison tool, and a buying/selling platform. Developed Frontend pages such as Dashboard, User page, User input fields, Vehicle Recommendation output, and Vehicle Comparison tool. Developed a marketing site for DreamAuto.",
-      image: "public/DreamAuto.png",
+      image: "/DreamAuto.png",
       tags: ["Next.js", "Python", "Firebase", "TypeScript"]
     }
   ];
@@ -60,7 +60,7 @@ function App() {
       {/* Background Video */}
       <video
         className="absolute inset-0 w-full h-full object-cover -z-200 blur-lg"
-        src="public/bkvideO2.mp4"
+        src="/bkvideO2.mp4"
         autoPlay
         muted
         loop
@@ -81,7 +81,7 @@ function App() {
           >
             <div className="w-48 h-48 mx-auto relative">
               <img
-                src="public/profile.jpg"
+                src="/profile.jpg"
                 alt="Profile"
                 className="w-full h-full rounded-full object-cover shadow-xl"
               />
