@@ -121,7 +121,7 @@ function App() {
             transition={{ delay: 0.6 }}
           >
             <motion.a
-              href="www.linkedin.com/in/rasindubandara"
+              href="https://github.com/RasinduBandara/"
               target="_blank"
               rel="noopener noreferrer"
               whileHover={{ scale: 1.1 }}
@@ -131,7 +131,7 @@ function App() {
               <Github size={24} />
             </motion.a>
             <motion.a
-              href="https://www.linkedin.com/in/rasindubandara/"
+              href="https://www.linkedin.com/in/RasinduBandara/"
               target="_blank"
               rel="noopener noreferrer"
               whileHover={{ scale: 1.1 }}
@@ -441,7 +441,7 @@ function App() {
                 <li>
                   <div className="flex gap-4 mt-4">
                     <motion.a
-                      href="https://github.com/RasinduBandara"
+                      href="https://github.com/RasinduBandara/"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-gray-400 hover:text-white transition-colors"
