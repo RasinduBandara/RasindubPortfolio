@@ -121,7 +121,7 @@ function App() {
             transition={{ delay: 0.6 }}
           >
             <motion.a
-              href="https://github.com/RasinduBandara"
+              href="www.linkedin.com/in/rasindubandara"
               target="_blank"
               rel="noopener noreferrer"
               whileHover={{ scale: 1.1 }}
@@ -131,7 +131,7 @@ function App() {
               <Github size={24} />
             </motion.a>
             <motion.a
-              href="https://www.linkedin.com/in/rasindu-bandara-7130ab295/"
+              href="https://www.linkedin.com/in/rasindubandara/"
               target="_blank"
               rel="noopener noreferrer"
               whileHover={{ scale: 1.1 }}
