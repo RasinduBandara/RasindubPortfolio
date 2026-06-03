@@ -1,5 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
+import { motion, useScroll, useTransform, AnimatePresence, useReducedMotion } from 'framer-motion';
+
+// Detect mobile once at module level
+function useIsMobile() {
+  const [isMobile, setIsMobile] = useState(() => window.innerWidth < 768);
+  useEffect(() => {
+    const handler = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener('resize', handler, { passive: true });
+    return () => window.removeEventListener('resize', handler);
+  }, []);
+  return isMobile;
+}
 import {
   Github, Linkedin, Mail, ExternalLink, Send, Heart,
   Code2, Server, Database, Layers, Wrench, ChevronDown,
@@ -172,16 +183,31 @@ const CERTIFICATIONS = [
 // ─── ANIMATION VARIANTS ───────────────────────────────────────────────────────
 
 const fadeUp = {
-  hidden: { opacity: 0, y: 30 },
+  hidden: { opacity: 0, y: 20 },
   visible: (i = 0) => ({
     opacity: 1,
     y: 0,
-    transition: { duration: 0.6, delay: i * 0.1, ease: 'easeOut' },
+    transition: { duration: 0.5, delay: i * 0.08, ease: 'easeOut' },
   }),
 };
 
+// Mobile-friendly: no stagger delay, instant reveal
+const fadeUpFast = {
+  hidden: { opacity: 0, y: 12 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.35, ease: 'easeOut' },
+  },
+};
+
 const stagger = {
-  visible: { transition: { staggerChildren: 0.1 } },
+  visible: { transition: { staggerChildren: 0.08 } },
+};
+
+const staggerFast = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.04 } },
 };
 
 // ─── COMPONENTS ──────────────────────────────────────────────────────────────
@@ -279,32 +305,45 @@ function Navbar() {
 }
 
 function HeroSection() {
+  const isMobile = useIsMobile();
+  const prefersReduced = useReducedMotion();
   const { scrollY } = useScroll();
-  const y = useTransform(scrollY, [0, 400], [0, -80]);
+  const y = useTransform(scrollY, [0, 400], [0, isMobile ? 0 : -80]);
 
   return (
     <section id="hero" className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Video background */}
-      <video
-        className="absolute inset-0 w-full h-full object-cover opacity-20"
-        src="/bkvideo2.mp4"
-        autoPlay muted loop playsInline
-      />
+      {/* Video background — skip on mobile to save CPU/memory */}
+      {!isMobile && (
+        <video
+          className="absolute inset-0 w-full h-full object-cover opacity-20"
+          src="/bkvideo3.mp4"
+          autoPlay muted loop playsInline
+        />
+      )}
 
       {/* Gradient overlay */}
       <div className="absolute inset-0 bg-gradient-to-b from-gray-950/60 via-gray-950/50 to-gray-950" />
 
-      {/* Ambient blobs */}
-      <motion.div
-        className="absolute top-1/4 -left-20 w-96 h-96 bg-violet-600 rounded-full blur-[120px] opacity-20"
-        animate={{ scale: [1, 1.15, 1], x: [0, 40, 0] }}
-        transition={{ duration: 10, repeat: Infinity, repeatType: 'reverse' }}
-      />
-      <motion.div
-        className="absolute bottom-1/3 -right-20 w-96 h-96 bg-blue-600 rounded-full blur-[120px] opacity-20"
-        animate={{ scale: [1.1, 1, 1.1], x: [0, -40, 0] }}
-        transition={{ duration: 10, repeat: Infinity, repeatType: 'reverse' }}
-      />
+      {/* Ambient blobs — animated on desktop, static on mobile */}
+      {!isMobile && !prefersReduced ? (
+        <>
+          <motion.div
+            className="absolute top-1/4 -left-20 w-96 h-96 bg-violet-600 rounded-full blur-[120px] opacity-20"
+            animate={{ scale: [1, 1.15, 1], x: [0, 40, 0] }}
+            transition={{ duration: 10, repeat: Infinity, repeatType: 'reverse' }}
+          />
+          <motion.div
+            className="absolute bottom-1/3 -right-20 w-96 h-96 bg-blue-600 rounded-full blur-[120px] opacity-20"
+            animate={{ scale: [1.1, 1, 1.1], x: [0, -40, 0] }}
+            transition={{ duration: 10, repeat: Infinity, repeatType: 'reverse' }}
+          />
+        </>
+      ) : (
+        <>
+          <div className="absolute top-1/4 -left-20 w-72 h-72 bg-violet-600 rounded-full blur-[100px] opacity-15 pointer-events-none" />
+          <div className="absolute bottom-1/3 -right-20 w-72 h-72 bg-blue-600 rounded-full blur-[100px] opacity-15 pointer-events-none" />
+        </>
+      )}
 
       <motion.div style={{ y }} className="relative z-10 container mx-auto px-6 text-center">
         {/* Profile image */}
@@ -444,45 +483,46 @@ function HeroSection() {
 }
 
 function AboutSection() {
+  const isMobile = useIsMobile();
   return (
     <section id="about" className="py-28 bg-gray-950 relative">
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(139,92,246,0.06),transparent_60%)]" />
       <div className="container mx-auto px-6">
         <motion.div
-          variants={stagger}
+          variants={isMobile ? staggerFast : stagger}
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, margin: '-80px' }}
+          viewport={{ once: true, margin: '0px' }}
           className="grid lg:grid-cols-2 gap-16 items-center"
         >
           {/* Text */}
           <div>
-            <motion.p variants={fadeUp} className="text-violet-400 text-sm font-semibold tracking-widest uppercase mb-3">
+            <motion.p variants={fadeUpFast} className="text-violet-400 text-sm font-semibold tracking-widest uppercase mb-3">
               About Me
             </motion.p>
-            <motion.h2 variants={fadeUp} className="text-4xl md:text-5xl font-bold text-white mb-6 leading-tight">
+            <motion.h2 variants={fadeUpFast} className="text-4xl md:text-5xl font-bold text-white mb-6 leading-tight">
               Developer. Problem Solver.
               <br />
               <span className="bg-gradient-to-r from-violet-400 to-blue-400 bg-clip-text text-transparent">
                 Creative Thinker.
               </span>
             </motion.h2>
-            <motion.p variants={fadeUp} className="text-gray-400 leading-relaxed mb-5 text-base">
+            <motion.p variants={fadeUpFast} className="text-gray-400 leading-relaxed mb-5 text-base">
               I'm a fourth-year Computer Science student at IIT Sri Lanka (University of Westminster),
               currently on my internship year at Sri Lanka Telecom where I work on real-world software
               systems used by government institutions.
             </motion.p>
-            <motion.p variants={fadeUp} className="text-gray-400 leading-relaxed mb-5 text-base">
+            <motion.p variants={fadeUpFast} className="text-gray-400 leading-relaxed mb-5 text-base">
               I blend technical depth with a creative edge — shaped partly by my background as a musician.
               Whether I'm architecting a Spring Boot backend, crafting a pixel-perfect React interface,
               or leading a team through a client delivery, I bring the same focus: build something that
               works beautifully and matters to users.
             </motion.p>
-            <motion.p variants={fadeUp} className="text-gray-400 leading-relaxed mb-8 text-base">
+            <motion.p variants={fadeUpFast} className="text-gray-400 leading-relaxed mb-8 text-base">
               My stack spans Java, Python, React, Next.js, Node.js, Django, and Spring Boot. I'm always
               learning — currently deepening expertise in system design and full-stack architecture.
             </motion.p>
-            <motion.div variants={fadeUp} className="flex flex-wrap gap-3">
+            <motion.div variants={fadeUpFast} className="flex flex-wrap gap-3">
               {[
                 { icon: <MapPin size={14} />, text: 'Ganemulla, Sri Lanka' },
                 { icon: <GraduationCap size={14} />, text: 'IIT Sri Lanka' },
@@ -499,7 +539,7 @@ function AboutSection() {
           </div>
 
           {/* Stats grid */}
-          <motion.div variants={stagger} className="grid grid-cols-2 gap-4">
+          <motion.div variants={staggerFast} className="grid grid-cols-2 gap-4">
             {[
               { label: 'Systems Built at SLT', value: '5+', color: 'from-blue-500/20 to-cyan-500/20', border: 'border-blue-500/20' },
               { label: 'Projects Delivered', value: '3+', color: 'from-violet-500/20 to-purple-500/20', border: 'border-violet-500/20' },
@@ -508,7 +548,7 @@ function AboutSection() {
             ].map(({ label, value, color, border }) => (
               <motion.div
                 key={label}
-                variants={fadeUp}
+                variants={fadeUpFast}
                 whileHover={{ y: -4, scale: 1.02 }}
                 className={`p-6 rounded-2xl bg-gradient-to-br ${color} border ${border} text-center`}
               >
@@ -531,7 +571,7 @@ function SkillsSection() {
         <motion.div
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, margin: '-80px' }}
+          viewport={{ once: true, margin: '0px' }}
           variants={stagger}
           className="text-center mb-16"
         >
@@ -547,10 +587,10 @@ function SkillsSection() {
           {SKILLS.map((group, i) => (
             <motion.div
               key={group.category}
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: i * 0.1 }}
+              viewport={{ once: true, margin: '0px' }}
+              transition={{ duration: 0.4, delay: i * 0.06 }}
               whileHover={{ y: -4 }}
               className="bg-gray-800/60 border border-white/5 rounded-2xl p-6 backdrop-blur-sm"
             >
@@ -584,7 +624,7 @@ function ExperienceSection() {
         <motion.div
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, margin: '-80px' }}
+          viewport={{ once: true, margin: '0px' }}
           variants={stagger}
           className="text-center mb-16"
         >
@@ -654,7 +694,7 @@ function ProjectsSection() {
         <motion.div
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, margin: '-80px' }}
+          viewport={{ once: true, margin: '0px' }}
           variants={stagger}
           className="text-center mb-16"
         >
@@ -778,7 +818,7 @@ function EducationSection() {
         <motion.div
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, margin: '-80px' }}
+          viewport={{ once: true, margin: '0px' }}
           variants={stagger}
           className="text-center mb-16"
         >
@@ -790,14 +830,14 @@ function EducationSection() {
           </motion.h2>
         </motion.div>
 
-        {/* <div className="max-w-4xl mx-auto space-y-8">
+        <div className="max-w-4xl mx-auto space-y-8">
           {EDUCATION.map((edu, i) => (
             <motion.div
               key={edu.degree}
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: i * 0.15 }}
+              viewport={{ once: true, margin: '0px' }}
+              transition={{ duration: 0.4, delay: i * 0.1 }}
               className="bg-gray-900/80 border border-white/5 rounded-2xl p-8"
             >
               <div className="flex flex-wrap items-start justify-between gap-4 mb-6">
@@ -840,7 +880,7 @@ function EducationSection() {
               )}
             </motion.div>
           ))}
-        </div> */}
+        </div>
 
         {/* Certifications */}
         <motion.div
@@ -912,7 +952,7 @@ function ContactSection() {
         <motion.div
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, margin: '-80px' }}
+          viewport={{ once: true, margin: '0px' }}
           variants={stagger}
           className="text-center mb-16"
         >
@@ -1159,3 +1199,5 @@ export default function App() {
     </div>
   );
 }
+
+
