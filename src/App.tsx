@@ -1193,7 +1193,7 @@ export default function App() {
       <SkillsSection />
       <ExperienceSection />
       <ProjectsSection />
-      <EducationSection />
+      {/* <EducationSection /> */}
       <ContactSection />
       <Footer />
     </div>
