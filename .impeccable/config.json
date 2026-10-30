@@ -1,0 +1,26 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "cramped-padding",
+        "value": "*",
+        "files": [
+          "index.html"
+        ],
+        "createdAt": "2026-10-30T08:51:40.555Z",
+        "reason": "Claude: false positive, every .sheet section has clamp(20px..64px) padding or inset absolute children; detector can't resolve clamp()"
+      },
+      {
+        "rule": "pulsing-dot",
+        "value": "*",
+        "files": [
+          "index.html"
+        ],
+        "createdAt": "2026-10-30T08:51:40.787Z",
+        "reason": "Claude: intentional availability indicator from the user's supplied design"
+      }
+    ]
+  }
+}
